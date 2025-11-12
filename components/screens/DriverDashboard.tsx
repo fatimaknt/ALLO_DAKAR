@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomNav from '../common/BottomNav';
 import RideCard from '../common/RideCard';
 import StatsCard from '../common/StatsCard';
@@ -12,6 +13,7 @@ import { NavigationProp } from '../../lib/navigation';
 export default function DriverDashboard() {
   const navigation = useNavigation<NavigationProp<'DriverNavigation'>>();
   const { activeRide, setActiveRide } = useApp();
+  const insets = useSafeAreaInsets();
 
   const rideRequests: RideRequest[] = [
     {
@@ -64,10 +66,10 @@ export default function DriverDashboard() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 24) }]}>
         <View style={styles.headerContent}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>AD</Text>
+            <Text style={styles.avatarText}>MN</Text>
           </View>
           <View style={styles.headerText}>
             <Text style={styles.headerTitle}>Mode Chauffeur</Text>

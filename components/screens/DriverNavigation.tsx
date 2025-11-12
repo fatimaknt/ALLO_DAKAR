@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     paddingHorizontal: 16,
     paddingBottom: 16,
+    backgroundColor: 'transparent',
   },
   infoCard: {
     backgroundColor: '#ffffff',
@@ -164,9 +165,11 @@ const styles = StyleSheet.create({
     padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
   infoHeader: {
     flexDirection: 'row',
