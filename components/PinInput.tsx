@@ -11,12 +11,23 @@ interface PinInputProps {
 export function PinInput({ length = 4, onComplete, error = false, disabled = false }: PinInputProps) {
     const [pin, setPin] = useState<string[]>(Array(length).fill(''));
     const inputRefs = useRef<(TextInput | null)[]>([]);
+    const onCompleteRef = useRef(onComplete);
+    const hasCalledComplete = useRef(false);
+
+    // Update ref when onComplete changes
+    useEffect(() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
 
     useEffect(() => {
-        if (pin.every(digit => digit !== '')) {
-            onComplete(pin.join(''));
+        const isComplete = pin.every(digit => digit !== '');
+        if (isComplete && !hasCalledComplete.current) {
+            hasCalledComplete.current = true;
+            onCompleteRef.current(pin.join(''));
+        } else if (!isComplete) {
+            hasCalledComplete.current = false;
         }
-    }, [pin, onComplete]);
+    }, [pin]);
 
     const handleChange = (index: number, value: string) => {
         if (disabled) return;

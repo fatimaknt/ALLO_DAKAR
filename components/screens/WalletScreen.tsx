@@ -75,38 +75,50 @@ export default function WalletScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header - Fixe en dehors du ScrollView */}
+      {/* Header with gradient background */}
       <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 24) }]}>
         <View style={styles.headerTop}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <TouchableOpacity
+            onPress={() => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigation.navigate('ClientDashboard' as any);
+              }
+            }}
+            style={styles.backButton}
+          >
             <Ionicons name="arrow-back" size={24} color="#ffffff" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Mon Wallet</Text>
           <View style={styles.spacer} />
         </View>
+
+        {/* Balance Card inside header */}
+        <View style={styles.balanceCardContainer}>
+          <View style={styles.balanceCard}>
+            <View style={styles.balanceHeader}>
+              <Text style={styles.balanceLabel}>Solde disponible</Text>
+              <TouchableOpacity
+                onPress={() => setShowBalance(!showBalance)}
+                style={styles.eyeButton}
+              >
+                <Ionicons
+                  name={showBalance ? 'eye' : 'eye-off'}
+                  size={16}
+                  color="#ffffff"
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.balanceAmount}>
+              {showBalance ? formatCurrency(walletData.balance) : '••••••'}
+            </Text>
+            <Text style={styles.balanceName}>{user?.name}</Text>
+          </View>
+        </View>
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        {/* Balance Card */}
-        <View style={styles.balanceCard}>
-          <View style={styles.balanceHeader}>
-            <Text style={styles.balanceLabel}>Solde disponible</Text>
-            <TouchableOpacity
-              onPress={() => setShowBalance(!showBalance)}
-              style={styles.eyeButton}
-            >
-              <Ionicons
-                name={showBalance ? 'eye' : 'eye-off'}
-                size={16}
-                color="#ffffff"
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.balanceAmount}>
-            {showBalance ? formatCurrency(walletData.balance) : '••••••'}
-          </Text>
-          <Text style={styles.balanceName}>{user?.name}</Text>
-        </View>
 
         {/* Quick Actions */}
         <View style={styles.actionsContainer}>
@@ -221,6 +233,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9fafb',
+    position: 'relative',
   },
   scrollView: {
     flex: 1,
@@ -230,7 +243,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#facc15',
-    paddingBottom: 32,
+    paddingBottom: 48,
   },
   headerTop: {
     flexDirection: 'row',
@@ -251,11 +264,15 @@ const styles = StyleSheet.create({
   spacer: {
     width: 36,
   },
+  balanceCardContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
+  },
   balanceCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     padding: 24,
-    marginHorizontal: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
   },
@@ -274,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   balanceAmount: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: '700',
     color: '#ffffff',
     marginBottom: 4,
@@ -285,7 +302,7 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     paddingHorizontal: 16,
-    marginTop: -16,
+    marginTop: -20,
     marginBottom: 24,
   },
   actionsCard: {
@@ -294,19 +311,20 @@ const styles = StyleSheet.create({
     padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
   },
   actionsGrid: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    gap: 16,
+    alignItems: 'center',
   },
   actionButton: {
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
     flex: 1,
+    paddingVertical: 8,
   },
   actionIcon: {
     width: 48,
@@ -314,11 +332,13 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 8,
   },
   actionLabel: {
     fontSize: 14,
     fontWeight: '500',
     color: '#1f2937',
+    textAlign: 'center',
   },
   transactionsContainer: {
     paddingHorizontal: 16,

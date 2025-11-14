@@ -17,7 +17,7 @@ export function WalletProtected({ children }: WalletProtectedProps) {
         if (!walletData.hasPinCode) {
             navigation.navigate('PinCodeSetup' as any);
         }
-    }, [walletData.hasPinCode, navigation]);
+    }, [walletData.hasPinCode]);
 
     // If PIN is set, show children (wallet screens)
     if (walletData.hasPinCode) {

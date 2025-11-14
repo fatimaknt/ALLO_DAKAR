@@ -26,10 +26,18 @@ export default function PinCodeSetup() {
   const handleConfirmPinComplete = (pin: string) => {
     if (pin === firstPin) {
       setPinCode(pin);
-      Alert.alert('Succès', 'Code PIN créé avec succès');
-      setTimeout(() => {
-        navigation.navigate('Wallet' as any);
-      }, 500);
+      Alert.alert('Succès', 'Code PIN créé avec succès', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Redirect immediately after PIN is set
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Wallet' as any }],
+            });
+          }
+        }
+      ]);
     } else {
       setError(true);
       Alert.alert('Erreur', 'Les codes PIN ne correspondent pas');
@@ -46,8 +54,17 @@ export default function PinCodeSetup() {
       {/* Header - Fixe en dehors du ScrollView */}
       <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 24) }]}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={20} color="#1f2937" />
+          <TouchableOpacity
+            onPress={() => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigation.navigate('Wallet' as any);
+              }
+            }}
+            style={styles.backButton}
+          >
+            <Ionicons name="chevron-back" size={24} color="#1f2937" />
           </TouchableOpacity>
           <View style={styles.headerText}>
             <Text style={styles.headerTitle}>Sécuriser mon Wallet</Text>
@@ -85,6 +102,7 @@ export default function PinCodeSetup() {
           {/* PIN Input */}
           <View style={styles.pinContainer}>
             <PinInput
+              key={step} // Force re-render when step changes
               onComplete={step === 'create' ? handleFirstPinComplete : handleConfirmPinComplete}
               error={error}
             />
@@ -152,7 +170,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
-    borderRadius: 20,
+    borderRadius: 12,
   },
   headerText: {
     flex: 1,

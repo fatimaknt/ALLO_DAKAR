@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput, StyleSheet, FlatList, SectionList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp, Transaction } from '../../contexts/AppContext';
 import { NavigationProp } from '../../lib/navigation';
@@ -8,6 +9,7 @@ import { NavigationProp } from '../../lib/navigation';
 export default function TransactionHistory() {
   const navigation = useNavigation<NavigationProp<'TransactionHistory'>>();
   const { transactions } = useApp();
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | Transaction['type']>('all');
 
@@ -159,7 +161,7 @@ export default function TransactionHistory() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 24) }]}>
         <View style={styles.headerTop}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={20} color="#1f2937" />
@@ -241,7 +243,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
-    paddingTop: 16,
     paddingBottom: 16,
   },
   headerTop: {
